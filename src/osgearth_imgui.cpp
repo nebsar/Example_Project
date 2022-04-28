@@ -193,7 +193,7 @@ int main(int argc, char** argv)
 
 	osg::ref_ptr<Cache> mapCache = CacheFactory::create(osgEarthCacheOptions);
 
-	osg::ref_ptr<osg::Node> globe = osgDB::readNodeFile("bing.earth");
+	osg::ref_ptr<osg::Node> globe = osgDB::readNodeFile("../../../resources/maps/earth_file/bing.earth");
 
 
 	osg::ref_ptr<MapNode> mapNode = MapNode::get(globe);
@@ -218,7 +218,16 @@ int main(int argc, char** argv)
 	arcGISLayer->setCachePolicy(osgEarth::CachePolicy::USAGE_READ_WRITE);
 	arcGISLayer->setCacheID("ArcGIS-Layer");
 
+        osg::ref_ptr<osgEarth::MBTilesImageLayer> vfrSectionalLayer = new osgEarth::MBTilesImageLayer;
+	vfrSectionalLayer->setURL("../../../resources/maps/mbtiles/Detroit SEC 101.mbtiles");
+	vfrSectionalLayer->setName("VFR Sectional Layer");
+	vfrSectionalLayer->setAsyncLoading(true);
+	vfrSectionalLayer->setCachePolicy(osgEarth::CachePolicy::USAGE_READ_WRITE);
+	vfrSectionalLayer->setCacheID("VFR-Sectional-Layer");
 
+	mapNode->getMap()->addLayer(vfrSectionalLayer);
+
+	point.set(srs, -81.1386835371799, 43.02443500443512, 4000, ALTMODE_ABSOLUTE);
 
 	point.set(srs, -81.1386835371799, 43.02443500443512, 4000, ALTMODE_ABSOLUTE);
 

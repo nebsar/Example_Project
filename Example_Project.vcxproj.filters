@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\ImGuiApp">
+      <UniqueIdentifier>{c4cd61f9-1980-4cb0-bbb8-d8fd589d61d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ImGuiApp">
+      <UniqueIdentifier>{52df0bf0-9c91-444f-8969-71c8b78d5c40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ImGui">
+      <UniqueIdentifier>{f863f3ba-64a2-479c-84c3-77e7f0adc08e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ImGui">
+      <UniqueIdentifier>{24dc0a98-313b-4a69-8d87-7241ae04f249}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\osgearth_imgui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_demo.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_draw.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_tables.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="dependencies\imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiApp\ImGuiImp.cpp">
+      <Filter>Source Files\ImGuiApp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\ImGuiApp\CameraGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\EphemerisGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\ImGuiImp.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\ImGuiApp.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\LayersGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\NetworkMonitorGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\NotifyGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\RenderingGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\SceneGraphGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\SearchGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\ShaderGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\SystemGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\TerrainEditGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\TerrainGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\TextureInspectorGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiApp\ViewpointsGUI.hpp">
+      <Filter>Header Files\ImGuiApp</Filter>
+    </ClInclude>
+    <ClInclude Include="dependencies\imgui\backends\imgui_impl_opengl3.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

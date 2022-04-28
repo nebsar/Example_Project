@@ -229,8 +229,6 @@ int main(int argc, char** argv)
 
 	point.set(srs, -81.1386835371799, 43.02443500443512, 4000, ALTMODE_ABSOLUTE);
 
-	point.set(srs, -81.1386835371799, 43.02443500443512, 4000, ALTMODE_ABSOLUTE);
-
 
 	//for smoothing the 3d model
 	osg::DisplaySettings::instance()->setNumMultiSamples(4);

@@ -64,57 +64,22 @@ int main(int argc, char** argv)
 	osg::ref_ptr<osgViewer::Viewer> viewer = new osgViewer::Viewer();
 
 
-	//too get the secons screen position ///////////////////////////////
-
-
 	unsigned int scrWidth;
 	unsigned int scrHeight;
-	osg::GraphicsContext::WindowingSystemInterface* wsi =
-		osg::GraphicsContext::getWindowingSystemInterface();
-	if (wsi->getNumScreens() > 0) {
-		wsi->getScreenResolution(osg::GraphicsContext::ScreenIdentifier(0), scrWidth, scrHeight);
-	}
 	osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
 	traits->screenNum = 0; // second screen
 	traits->x = 0;
 	traits->y = 0;
 	traits->width = 2560;
 	traits->height = 1024;
-	traits->depth = 24;
-	traits->stencil = 1;
-	traits->alpha = 8;
-	traits->samples = 4;
 	traits->windowDecoration = false;
-	traits->doubleBuffer = true;
-	traits->sharedContext = 0;
-	traits->setInheritedWindowPixelFormat = true;
 
 	osg::ref_ptr<osg::GraphicsContext> gc = osg::GraphicsContext::createGraphicsContext(traits.get());
 
-	osg::ref_ptr<osg::Camera> mainCamera = new osg::Camera;
 	viewer->getCamera()->setGraphicsContext(gc.get());
-	viewer->getCamera()->setViewport(new osg::Viewport(0, 0, 2560, 1024));
-
-
-	////////////////////////////////////////////////////////////////////////////////
-
-
-	osg::DisplaySettings::instance()->setMinimumNumStencilBits(8);
-	viewer->getCamera()->setClearMask(
-		GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT
-	);
-	viewer->getCamera()->setClearStencil(0);
-
-	// Use SingleThreaded mode with imgui.
-	//viewer->setThreadingModel(viewer->SingleThreaded);
 
 	osg::ref_ptr<EarthManipulator> earthManipulator = new EarthManipulator();
 	viewer->setCameraManipulator(earthManipulator);
-
-
-	// 
-	//ldbf->setUseFragDepth(true);
-	viewer->getCamera()->setSmallFeatureCullingPixelSize(-1.0f);
 
 	osg::ref_ptr<osg::Group> group = new osg::Group();
 
@@ -128,7 +93,7 @@ int main(int argc, char** argv)
 
 	group->addChild(label);
 
-	osg::ref_ptr<osg::Node> globe = osgDB::readNodeFile("../../../resources/maps/earth_file/bing.earth");
+	osg::ref_ptr<osg::Node> globe = osgDB::readNodeFile("bing.earth");
 
 
 	osg::ref_ptr<MapNode> mapNode = MapNode::get(globe);
@@ -173,25 +138,14 @@ int main(int argc, char** argv)
 	_skyOptions.exposure() = 3.215f;
 	_skyOptions.ambient() = 0.5f;
 	osg::ref_ptr<SkyNode> sky = SkyNode::create(_skyOptions);
-
-	//for sky shading effects
-	//sky->addChild(outline);
 	sky->addChild(root);
-
-	//this is important for seeing the black background
-	sky->attach(viewer);
-
 
 	sky->addChild(group);
 
 	group->addChild(mapNode);
 
-
 	Style labelStyle;
 	labelStyle.getOrCreate<TextSymbol>()->size() = 14.0;
-	labelStyle.getOrCreate<TextSymbol>()->halo()->color() = osg::Vec4(0, 0, 0, 1);
-	labelStyle.getOrCreate<TextSymbol>()->fill()->color() = osg::Vec4(0, 1, 0, 1);
-	labelStyle.getOrCreate<TextSymbol>()->alignment() = TextSymbol::ALIGN_CENTER_CENTER;
 	osg::ref_ptr<LabelNode> RWY33 = new LabelNode(GeoPoint(srs, -81.1386835371799, 43.02443500443512, 910 * 0.3048), "RWY33", labelStyle);
 	osg::ref_ptr<LabelNode> RWY15 = new LabelNode(GeoPoint(srs, -81.15957085977567, 43.041904904428904, 910 * 0.3048), "RWY15", labelStyle);
 	osg::ref_ptr<LabelNode> CYXU = new LabelNode(GeoPoint(srs, -81.14969136937144, 43.03367839385314, 910 * 0.3048), "CYXU", labelStyle);

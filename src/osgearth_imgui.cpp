@@ -47,58 +47,12 @@ using namespace osgEarth::Util;
 
 
 
-class UpdateAircraftCallback : public osg::NodeCallback
 
-{
-
-protected:
-	double* _heading;
-public:
-	UpdateAircraftCallback(double* heading) : _heading(heading) {}
-
-	void operator()(osg::Node* node, osg::NodeVisitor* nv)
-	{
-		osgEarth::TrackNode* tracknode = static_cast<osgEarth::TrackNode*>(node);
-		Style pin;
-
-		pin.getOrCreate<IconSymbol>()->url()->setLiteral("F-35A.png");
-		IconSymbol* is = pin.getSymbol<IconSymbol>();
-		is->heading() = NumericExpression(*_heading);
-		pin.getOrCreate<IconSymbol>()->alignment() = IconSymbol::ALIGN_CENTER_CENTER; //add this line
-		tracknode->setStyle(pin);
-		//traverse(node, nv);
-	}
-};
 //////////////////////////////////////////////////////////////////////////////////////
 
-void rotateIcon(PlaceNode* pNode) {
-	double heading = 0.0;
-	while (true) {
-		Style pin;
 
-		pin.getOrCreate<IconSymbol>()->url()->setLiteral("F-35A.png");
-		IconSymbol* is = pin.getSymbol<IconSymbol>();
-		is->heading() = NumericExpression(heading);
-		pNode->setStyle(pin);
-		//pNode->dirty();
-		heading -= 1;
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
-	}
-
-}
-
-void increaseHeading(double* heading) {
-	while (true)
-	{
-		*heading = *heading + 0.0000001;
-
-	}
-
-}
 
 osg::ref_ptr<SpatialReference> srs = SpatialReference::create("WGS84", "EGM96");
-
-
 
 
 int main(int argc, char** argv)
@@ -130,8 +84,6 @@ int main(int argc, char** argv)
 	traits->stencil = 1;
 	traits->alpha = 8;
 	traits->samples = 4;
-	traits->glContextVersion = "3.0";
-	//traits->sampleBuffers = 2;
 	traits->windowDecoration = false;
 	traits->doubleBuffer = true;
 	traits->sharedContext = 0;
@@ -157,22 +109,12 @@ int main(int argc, char** argv)
 	//viewer->setThreadingModel(viewer->SingleThreaded);
 
 	osg::ref_ptr<EarthManipulator> earthManipulator = new EarthManipulator();
-	earthManipulator->getSettings()->setMinMaxPitch(-360, 360);
-	earthManipulator->getSettings()->bindScroll(EarthManipulator::ACTION_ZOOM_IN, osgGA::GUIEventAdapter::SCROLL_UP);
-	earthManipulator->getSettings()->bindScroll(EarthManipulator::ACTION_ZOOM_OUT, osgGA::GUIEventAdapter::SCROLL_DOWN);
-	earthManipulator->getSettings()->bindMouse(EarthManipulator::ACTION_ZOOM, osgGA::GUIEventAdapter::MIDDLE_MOUSE_BUTTON);
-	//earthManipulator->getSettings()->bindMouse(EarthManipulator::ACTION_ZOOM, osgGA::GUIEventAdapter::MIDDLE_MOUSE_BUTTON);
-	earthManipulator->getSettings()->bindMouse(EarthManipulator::ACTION_ROTATE, osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON);
 	viewer->setCameraManipulator(earthManipulator);
 
 
 	// 
 	//ldbf->setUseFragDepth(true);
 	viewer->getCamera()->setSmallFeatureCullingPixelSize(-1.0f);
-
-	//this line is very important for getting close to ground.
-	viewer->getCamera()->setNearFarRatio(0.0000001f);
-
 
 	osg::ref_ptr<osg::Group> group = new osg::Group();
 
@@ -185,13 +127,6 @@ int main(int argc, char** argv)
 	label->setPosition(point);
 
 	group->addChild(label);
-
-	osgEarth::Drivers::FileSystemCacheOptions osgEarthCacheOptions;
-	osgEarthCacheOptions.rootPath() = "../../../../osgEarthData";
-	osgEarth::Registry::instance()->setDefaultCache(osgEarth::CacheFactory::create(osgEarthCacheOptions));
-	osgEarth::Registry::instance()->setDefaultCachePolicy(osgEarth::CachePolicy::USAGE_READ_WRITE);
-
-	osg::ref_ptr<Cache> mapCache = CacheFactory::create(osgEarthCacheOptions);
 
 	osg::ref_ptr<osg::Node> globe = osgDB::readNodeFile("../../../resources/maps/earth_file/bing.earth");
 
@@ -229,17 +164,7 @@ int main(int argc, char** argv)
 
 	point.set(srs, -81.1386835371799, 43.02443500443512, 4000, ALTMODE_ABSOLUTE);
 
-
-	//for smoothing the 3d model
-	osg::DisplaySettings::instance()->setNumMultiSamples(4);
-
-
-
-
-
 	osg::ref_ptr<osg::Group> root = new osg::Group;
-
-
 
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -259,143 +184,7 @@ int main(int argc, char** argv)
 
 	sky->addChild(group);
 
-
-	//osg::ref_ptr<GDALElevationLayer> elevationLayer = new GDALElevationLayer;
-	//elevationLayer->setURL("elevData.vrt");
-	//elevationLayer->setName("Elevation Layer");
-	//elevationLayer->setCachePolicy(osgEarth::CachePolicy::USAGE_READ_WRITE);
-	//mapNode->getMap()->addLayer(elevationLayer);
-
-
-	/*WMSImageLayer* wms = new WMSImageLayer;
-	wms->setURL("http://worldwind27.arc.nasa.gov/wms/virtualearth");
-	wms->setLayers("ve-h");
-	wms->setName("Bing Image Layer");
-	wms->setSecondsPerFrame(0.0);
-	wms->setFormat("png");
-	wms->setSRS("EPSG:3857");
-	wms->setStyle("default");
-	wms->setTransparent(false);
-	wms->setCachePolicy(osgEarth::CachePolicy::USAGE_READ_WRITE);
-	mapNode->getMap()->addLayer(wms);*/
-
-	/*osg::ref_ptr<MBTilesImageLayer> layerMbTiles = new MBTilesImageLayer;
-	layerMbTiles->setName("New_York VFR Sectional");
-	layerMbTiles->setURL("New_York_SEC_98_cc4.mbtiles");
-	layerMbTiles->setCachePolicy(osgEarth::CachePolicy::USAGE_READ_WRITE);
-	mapNode->getMap()->addLayer(layerMbTiles);
-
-	layerMbTiles = new MBTilesImageLayer;
-
-	layerMbTiles->setName("Montreal VFR Sectional");
-	layerMbTiles->setURL("Montreal_SEC_99_c26.mbtiles");
-	layerMbTiles->setCachePolicy(osgEarth::CachePolicy::USAGE_READ_WRITE);
-	mapNode->getMap()->addLayer(layerMbTiles);
-
-
-	layerMbTiles = new MBTilesImageLayer;
-	layerMbTiles->setURL("Detroit_SEC_97_c25.mbtiles");
-	layerMbTiles->setName("Detroit VFR Sectional");
-	layerMbTiles->setCachePolicy(osgEarth::CachePolicy::USAGE_READ_WRITE);
-	mapNode->getMap()->addLayer(layerMbTiles);
-
-
-	osg::ref_ptr<GDALImageLayer> gdal1 = new GDALImageLayer;
-	gdal1->setURL("C:/Users/Nebi.Sarikaya/Downloads/OSGEARTH/IMGUI_OSGEARTH_BUILD/rpf/RPF/A.TOC");
-	mapNode->getMap()->addLayer(gdal1);
-	gdal1->setName("ATOC");
-
-	osg::ref_ptr<GDALImageLayer> gdal2 = new GDALImageLayer;
-	gdal2->setURL("C:/Users/Nebi.Sarikaya/Downloads/OSGEARTH/denememb/onc.jpg");
-	mapNode->getMap()->addLayer(gdal2);
-	gdal2->setName("ONC");*/
-
 	group->addChild(mapNode);
-
-
-	/////////////// ADDING PRIZMA /////////////////////////
-	float distance = 10; // 60km from point A to BCDE
-	float width = 10;       // 21.8km in horizontal plane from A to BC and to DE
-	float height = 10;    // 9.77km in vertical plane from A to EC and to DB
-
-	//---------------- Building pyramid in local space -------------
-	osg::ref_ptr<osg::Vec3Array> vertices = new osg::Vec3Array;
-	/*vertices->push_back(osg::Vec3(0.0f, 0.0f, 0.0f));              // A
-	vertices->push_back(osg::Vec3(width, distance, -height));       // B
-	vertices->push_back(osg::Vec3(0.0f, 0.0f, 0.0f));              // A
-	vertices->push_back(osg::Vec3(width, distance, height));        // C
-	vertices->push_back(osg::Vec3(0.0f, 0.0f, 0.0f));              // A
-	vertices->push_back(osg::Vec3(-width, distance, -height));      // D
-	vertices->push_back(osg::Vec3(0.0f, 0.0f, 0.0f));              // A*/
-	vertices->push_back(osg::Vec3(-width, distance, height));      // E
-	vertices->push_back(osg::Vec3(-width, distance, -height));     // D
-	vertices->push_back(osg::Vec3(width, distance, -height));      // B
-	vertices->push_back(osg::Vec3(width, distance, height));       // C
-	vertices->push_back(osg::Vec3(-width, distance, height));      // E
-
-	osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
-
-	geom->setVertexArray(vertices.get());
-
-	//geom->addPrimitiveSet(new osg::DrawArrays(GL_TRIANGLE_STRIP, 0, vertices->size()));
-	geom->addPrimitiveSet(new osg::DrawArrays(GL_LINE_STRIP, 0, vertices->size()));
-
-	//We do not have to use Geode...
-	//osg::ref_ptr<osg::Geode> geode = new osg::Geode;
-
-	//geode->addDrawable(geom.get());
-
-	//--------------- Adding PositionAttitudeTransform to rotate pyramid ---------
-	osg::ref_ptr<osg::PositionAttitudeTransform> pat = new osg::PositionAttitudeTransform;
-	pat->addChild(geom.get());
-	double roll = 0.0f;
-	double pitch = 0.0f;
-	double heading = 321.0f;
-	osg::Quat ori =
-		osg::Quat(osg::DegreesToRadians(roll), osg::Vec3(0, 1, 0)) *
-		osg::Quat(osg::DegreesToRadians(pitch), osg::Vec3(1, 0, 0)) *
-		osg::Quat(osg::DegreesToRadians(heading), osg::Vec3(0, 0, -1));
-	pat->setAttitude(ori);
-
-	//------------- GeoTransform to set GeoPosition of point A ---------------
-	osg::ref_ptr<osgEarth::GeoTransform> geo = new osgEarth::GeoTransform;
-	geo->setTerrain(mapNode->getTerrain());
-	geo->setPosition(GeoPoint(srs, -81.1386835371799, 43.02443500443512, 400, ALTMODE_ABSOLUTE));
-	geo->addChild(pat.get());
-
-	//------------- Add GeoTransform to root group -------------
-	group->addChild(geo.get());
-
-
-
-
-	/////////////////////////////////////////////////////////////////////////////////////////
-
-
-	//////////////////////// ICON SYMBOL ///////////////////////////////////////
-
-
-	/*Style pin;
-
-	pin.getOrCreate<IconSymbol>()->url()->setLiteral("F-35A.png");
-	IconSymbol* is = pin.getSymbol<IconSymbol>();
-	is->heading() = NumericExpression(30);
-	pin.getOrCreate<IconSymbol>()->alignment() = IconSymbol::ALIGN_CENTER_CENTER; //add this line
-	osgEarth::PlaceNode* pNode = new PlaceNode(point, "1-1", pin);
-
-
-
-
-
-	///////////////////////////////TRACK NODE ///////////////////////////////////////////////
-
-	/*TrackNodeFieldSchema fieldSchema;
-
-	osg::Image* nodeImage = osgDB::readImageFile("F-35A.png");
-	TrackNode* trackNode = new TrackNode(point, nodeImage, fieldSchema);
-
-	 group->addChild(trackNode);*/
-
 
 
 	Style labelStyle;
